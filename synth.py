@@ -27,19 +27,10 @@ AUTOSYNTH_MULTIPLE_COMMITS = True
 
 
 # Run the gapic generator
-gapic = gcp.GAPICMicrogenerator()
+gapic = gcp.GAPICBazel()
 versions = ['v1beta1', 'v1']
 for version in versions:
-    library = gapic.typescript_library(
-        'containeranalysis', version,
-        generator_args={
-            "grpc-service-config": f"google/devtools/containeranalysis/{version}/containeranalysis_grpc_service_config.json",
-            "package-name": f"@google-cloud/containeranalysis",
-            "main-service": f"containeranalysis"
-        },
-        proto_path=f'/google/devtools/containeranalysis/{version}',
-        extra_proto_files=["google/cloud/common_resources.proto", "grafeas/v1"]
-    )
+    library = gapic.node_library('containeranalysis', version, proto_path=f'google/devtools/containeranalysis/{version}')
     s.copy(library, excludes=['package.json', 'README.md',
                               'src/v1beta1/index.ts', 'src/v1/index.ts', 'tslint.json'])
 
